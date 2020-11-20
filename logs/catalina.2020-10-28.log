@@ -1,0 +1,186 @@
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 409 ms
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 1 ms
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-28
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 5 ms
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+10 28, 2020 19:21:27 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 16 ms
+10 28, 2020 19:21:33 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: 
+java.lang.NullPointerException
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:44)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 28, 2020 19:21:34 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: this is a deliberately created exception
+java.lang.Exception: this is a deliberately created exception
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:36)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 28, 2020 19:25:45 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 247 ms
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 1 ms
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 0 ms
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-28
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 3 ms
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+10 28, 2020 19:25:46 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 16 ms
+10 28, 2020 19:27:46 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: 
+java.lang.NullPointerException
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:44)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 28, 2020 19:27:48 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: this is a deliberately created exception
+java.lang.Exception: this is a deliberately created exception
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:36)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 506 ms
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 0 ms
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-28
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 16 ms
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+10 28, 2020 19:39:36 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 41 ms
+10 28, 2020 19:39:40 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: 
+java.lang.NullPointerException
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:44)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 28, 2020 19:39:42 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: this is a deliberately created exception
+java.lang.Exception: this is a deliberately created exception
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:36)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)

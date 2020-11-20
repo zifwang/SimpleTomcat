@@ -1,0 +1,60 @@
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 330 ms
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 1 ms
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-22
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 22, 2020 11:29:02 AM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 190 ms
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 6 ms
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-22
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 22, 2020 13:33:58 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation

@@ -1,0 +1,74 @@
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 323 ms
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 1 ms
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-26
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 26, 2020 19:35:03 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 26, 2020 19:35:10 PM SimpleTomcat.catalina.Server$1 error
+ERROR: this is a deliberately created exception
+java.lang.Exception: this is a deliberately created exception
+	at SimpleTomcat.catalina.Server$1.run(Server.java:74)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a has finished in 259 ms
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT has finished in 0 ms
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Context <init>
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b has finished in 1 ms
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-10-26
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+10 26, 2020 20:05:05 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+10 26, 2020 20:05:10 PM SimpleTomcat.catalina.Server$1 error
+ERROR: this is a deliberately created exception
+java.lang.Exception: this is a deliberately created exception
+	at SimpleTomcat.catalina.Server$1.run(Server.java:74)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
