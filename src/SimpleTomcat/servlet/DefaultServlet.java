@@ -44,7 +44,7 @@ public class DefaultServlet extends HttpServlet {
         // uri in root -> open welcome file: index.html/jsp
         if (uri.equals("/")) uri = XMLParser.getWelcomeFile(request.getContext());
         String fileName = StrUtil.removePrefix(uri, "/");
-        File file = FileUtil.file(context.getDocBase(), fileName);
+        File file = FileUtil.file(request.getRealPath(fileName));
 
         if (file.exists()) {
             String extensionName = FileUtil.extName(file);

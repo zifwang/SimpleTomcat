@@ -2,6 +2,7 @@ package SimpleTomcat.catalina;
 
 import SimpleTomcat.classloader.WebappClassLoader;
 import SimpleTomcat.exception.WebConfigException;
+import SimpleTomcat.http.ApplicationContext;
 import SimpleTomcat.monitor.ContextFileChangeMonitor;
 import SimpleTomcat.util.XMLParser;
 import cn.hutool.core.date.DateUtil;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class Context {
     private ContextFileChangeMonitor contextFileChangeMonitor;  // contextFileChangeMonitor: monitor on files change
     private Boolean reloadable;                                 // reloadable: whether context is reloadable
     private Host host;                                          // Host of this context
+    private ServletContext servletContext;                      //
 
     /**
      * constructor
@@ -54,6 +57,8 @@ public class Context {
         this.servletUrlToNameMap = new HashMap<String, String>();
         this.servletUrlToClassMap = new HashMap<String, String>();
         this.reloadable = reloadable;
+        this.host = host;
+        this.servletContext = new ApplicationContext(this);
 
         ClassLoader commonClassLoader = Thread.currentThread().getContextClassLoader();
         this.webappClassLoader = new WebappClassLoader(docBase, commonClassLoader);
@@ -186,6 +191,11 @@ public class Context {
     public WebappClassLoader getWebappClassLoader() {
         return webappClassLoader;
     }
+
+    public ServletContext getServletContext() {
+        return servletContext;
+    }
+
     /**
      * Get servlet class by servlet name
      * @param name: servlet name

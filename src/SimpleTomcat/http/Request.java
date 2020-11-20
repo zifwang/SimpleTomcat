@@ -5,6 +5,7 @@ import SimpleTomcat.catalina.Service;
 import SimpleTomcat.util.MiniBrowser;
 import cn.hutool.core.util.StrUtil;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -56,6 +57,16 @@ public class Request extends BaseRequest{
         return this.method;
     }
 
+    @Override
+    public ServletContext getServletContext() {
+        return context.getServletContext();
+    }
+
+    @Override
+    public String getRealPath(String path) {
+        return getServletContext().getRealPath(path);
+    }
+
     /**
      * parse http request
      * @throws IOException
@@ -103,6 +114,5 @@ public class Request extends BaseRequest{
     private void parseMethod() {
         this.method = StrUtil.subBefore(this.requestString, " ", false);
     }
-
 
 }

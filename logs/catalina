@@ -1190,3 +1190,232 @@ java.lang.RuntimeException: this is a deliberately created exception
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
 	at java.lang.Thread.run(Thread.java:748)
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee succeed in 269 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /a does not contains WEB-INF directory
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a doesn't contains web.xml file
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a succeed in 1 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /ROOT does not contains WEB-INF directory
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT doesn't contains web.xml file
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT succeed in 2 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /b does not contains WEB-INF directory
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/b doesn't contains web.xml file
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b succeed in 6 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/javaweb/web
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/javaweb/web succeed in 5 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-11-20
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 1 ms
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+11 20, 2020 17:04:32 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 24 ms
+11 20, 2020 17:06:02 PM SimpleTomcat.monitor.ContextFileChangeMonitor$1 dealWith
+INFO : SimpleTomcat.monitor.ContextFileChangeMonitor@ed5efd1 detects import file changes in Webapp jsoup-1.12.1.jar
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee succeed in 241 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /a does not contains WEB-INF directory
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a doesn't contains web.xml file
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a succeed in 3 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /ROOT does not contains WEB-INF directory
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT doesn't contains web.xml file
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT succeed in 2 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /b does not contains WEB-INF directory
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/b doesn't contains web.xml file
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b succeed in 1 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/javaweb/web
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/javaweb/web succeed in 4 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-11-20
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 1 ms
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+11 20, 2020 17:08:31 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 23 ms
+11 20, 2020 17:08:51 PM SimpleTomcat.monitor.ContextFileChangeMonitor$1 dealWith
+INFO : SimpleTomcat.monitor.ContextFileChangeMonitor@77bfd576 detects import file changes in Webapp HelloServlet.class
+11 20, 2020 17:08:51 PM SimpleTomcat.catalina.Host reload
+INFO : Reloading Context with name [/javaweb] has started
+11 20, 2020 17:08:51 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/javaweb/web
+11 20, 2020 17:08:51 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/javaweb/web succeed in 2 ms
+11 20, 2020 17:08:51 PM SimpleTomcat.catalina.Host reload
+INFO : Reloading Context with name [/javaweb] has completed
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/j2ee succeed in 498 ms
+11 20, 2020 17:27:55 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /a does not contains WEB-INF directory
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a doesn't contains web.xml file
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/a succeed in 8 ms
+11 20, 2020 17:27:55 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /ROOT does not contains WEB-INF directory
+11 20, 2020 17:27:55 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT doesn't contains web.xml file
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/webapps/ROOT succeed in 2 ms
+11 20, 2020 17:27:56 PM SimpleTomcat.classloader.WebappClassLoader <init>
+INFO : Web application /b does not contains WEB-INF directory
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/SimpleTomcat/b
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context init
+INFO : Web application directory /Users/zifwang/Desktop/SimpleTomcat/b doesn't contains web.xml file
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/SimpleTomcat/b succeed in 1 ms
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/javaweb/web
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/javaweb/web succeed in 4 ms
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server versions:		SimpleTomcat/1.0.1
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server built:		2020-11-20
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : Server number:		1.0.1
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Name	:		Mac OS X
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : OS Version:		10.15.6
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : Architecture:		x86_64
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : Java Home:		/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Version:		1.8.0_171-b11
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server logJVM
+INFO : JVM Vendor:		Oracle Corporation
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8080]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8081]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector init
+INFO : Initializing ProtocolHandler [http-bio-8082]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Service init
+INFO : Initialization processed in 2 ms
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8080]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8081]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Connector start
+INFO : Starting ProtocolHandler [http-bio-8082]
+11 20, 2020 17:27:56 PM SimpleTomcat.catalina.Server start
+INFO : Server startup in 15 ms
+11 20, 2020 17:28:09 PM SimpleTomcat.catalina.HttpProcessor error
+ERROR: this is a deliberately created exception
+java.lang.RuntimeException: this is a deliberately created exception
+	at SimpleTomcat.servlet.DefaultServlet.service(DefaultServlet.java:43)
+	at SimpleTomcat.catalina.HttpProcessor.execute(HttpProcessor.java:35)
+	at SimpleTomcat.catalina.Connector$1.run(Connector.java:66)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+11 20, 2020 17:28:36 PM SimpleTomcat.monitor.ContextFileChangeMonitor$1 dealWith
+INFO : SimpleTomcat.monitor.ContextFileChangeMonitor@261b0398 detects import file changes in Webapp HelloServlet.class
+11 20, 2020 17:28:36 PM SimpleTomcat.catalina.Host reload
+INFO : Reloading Context with name [/javaweb] has started
+11 20, 2020 17:28:36 PM SimpleTomcat.catalina.Context deploy
+INFO : Deploying web application directory /Users/zifwang/Desktop/javaweb/web
+11 20, 2020 17:28:36 PM SimpleTomcat.catalina.Context deploy
+INFO : Deployment of web application directory /Users/zifwang/Desktop/javaweb/web succeed in 2 ms
+11 20, 2020 17:28:36 PM SimpleTomcat.catalina.Host reload
+INFO : Reloading Context with name [/javaweb] has completed
