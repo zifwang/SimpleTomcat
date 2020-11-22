@@ -10,12 +10,15 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +28,7 @@ import java.util.Map;
  *     Commonly, there are three types of web services: Servlet, Static Html, and Dynamic html (JSP file) based on Tomcat
  *     A web service is usual contains information about: http path, location in the local file system, special file types mapping,
  *     servlet mapping info., webappClass, and context file change monitor.
+ *     To make sure the servlet is singleton, a servlet pool is added.
  * -path: shows how to access this web app from url (static and dynamic html)
  * -docBase: location of this web app in the system (static and dynamic html)
  * -webXmlFile: the file that shows servlet services (often are get and post requests from html ) are provided
@@ -41,7 +45,9 @@ public class Context {
     private ContextFileChangeMonitor contextFileChangeMonitor;  // contextFileChangeMonitor: monitor on files change
     private Boolean reloadable;                                 // reloadable: whether context is reloadable
     private Host host;                                          // Host of this context
-    private ServletContext servletContext;                      //
+    private ServletContext servletContext;                      // servlet context
+    private Map<Class<?>, HttpServlet> servletPool;              // servlet pool
+
 
     /**
      * constructor
@@ -59,11 +65,31 @@ public class Context {
         this.reloadable = reloadable;
         this.host = host;
         this.servletContext = new ApplicationContext(this);
+        this.servletPool = new HashMap<>();
 
         ClassLoader commonClassLoader = Thread.currentThread().getContextClassLoader();
         this.webappClassLoader = new WebappClassLoader(docBase, commonClassLoader);
 
         deploy();
+    }
+
+    /**
+     * getHttpServlet(Class) method will return the corresponding servlet of input class.
+     * If the class is not existed, it will add this mapping to the servlet pool.
+     * To prevent creating the same class-servlet mapping, the key word synchronized is used.
+     * @param clazz
+     * @return HttpServlet
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public synchronized HttpServlet getHttpServlet(Class<?> clazz) throws InstantiationException, IllegalAccessException, ServletException {
+        if (this.servletPool.containsKey(clazz)) {
+            return this.servletPool.get(clazz);
+        }
+
+        HttpServlet servlet = (HttpServlet) clazz.newInstance();
+        this.servletPool.put(clazz, servlet);
+        return servlet;
     }
 
     /**

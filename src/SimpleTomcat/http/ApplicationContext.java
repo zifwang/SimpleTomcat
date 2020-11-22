@@ -5,6 +5,10 @@ import SimpleTomcat.catalina.Context;
 import java.io.File;
 import java.util.*;
 
+/**
+ * ApplicationContext Object is one of scopes in JSP. It is a global scope and every users share common data.
+ * The ApplicationContext inherent from ServletContext.
+ */
 public class ApplicationContext extends BaseServletContext {
     private Map<String, Object> attributesMap;  // attributesMap used to store data
     private Context context;                    // Context

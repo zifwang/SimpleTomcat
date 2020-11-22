@@ -7,11 +7,21 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * When Servlet is in the init. process, ServletConfig Object will pass configurations to the Servlet.
+ * StandardServletConfig implements ServletConfig and provides corresponding methods.
+ */
 public class StandardServletConfig implements ServletConfig {
-    private ServletContext servletContext;
-    private Map<String, String> initParameters;
-    private String servletName;
+    private ServletContext servletContext;          // servlet context
+    private Map<String, String> initParameters;     // initialized parameters
+    private String servletName;                     // servlet name
 
+    /**
+     * Constructor
+     * @param servletContext
+     * @param servletName
+     * @param initParameters
+     */
     public StandardServletConfig(ServletContext servletContext, String servletName, Map<String, String> initParameters) {
         this.servletContext = servletContext;
         this.servletName = servletName;

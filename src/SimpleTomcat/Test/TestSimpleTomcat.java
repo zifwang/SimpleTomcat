@@ -149,9 +149,10 @@ public class TestSimpleTomcat {
     }
 
     @Test
-    public void testJavawebHello() {
-        String html = getContentString("/javaweb/hello");
-        Assert.assertEquals(html,"Hello Simply Tomcat from HelloServlet@javaweb");
+    public void testJavawebHelloSingleton() {
+        String html1 = getContentString("/javaweb/hello");
+        String html2 = getContentString("/javaweb/hello");
+        Assert.assertEquals(html1,html2);
     }
 
     private byte[] getContentBytes(String uri) {
