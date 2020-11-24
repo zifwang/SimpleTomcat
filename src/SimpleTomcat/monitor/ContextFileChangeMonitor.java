@@ -58,7 +58,7 @@ public class ContextFileChangeMonitor {
 
                     if (fileName.endsWith(".jar") || fileName.endsWith(".class") || fileName.endsWith(".xml")) {
                         stopFlag = true;
-                        LogFactory.get().info(ContextFileChangeMonitor.this + " detects import file changes in Webapp {}", fileName);
+                        LogFactory.get().info(ContextFileChangeMonitor.this + " detects file changes in Webapp {}", fileName);
                         context.reload();
                     }
                 }

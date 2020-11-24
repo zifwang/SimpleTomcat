@@ -3,6 +3,7 @@ package SimpleTomcat.catalina;
 import SimpleTomcat.classloader.WebappClassLoader;
 import SimpleTomcat.exception.WebConfigException;
 import SimpleTomcat.http.ApplicationContext;
+import SimpleTomcat.http.StandardServletConfig;
 import SimpleTomcat.monitor.ContextFileChangeMonitor;
 import SimpleTomcat.util.XMLParser;
 import cn.hutool.core.date.DateUtil;
@@ -10,16 +11,17 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,31 +39,34 @@ public class Context {
     private String path;                                        // the path used to access
     private String docBase;                                     // the location of web application in the system
     private File webXmlFile;                                    // web.xml under WEB-INF directory
+
     private Map<String, String> servletNameToClassMap;          // map servlet name to class. key: name, value: class
     private Map<String, String> servletClassToNameMap;          // map servlet class to name. key: class, value: name
     private Map<String, String> servletUrlToNameMap;            // map servlet url to name. key: url, value: name
     private Map<String, String> servletUrlToClassMap;           // map servlet url to class. key: url, value: name
+    private Map<String, Map<String, String>> servletInitParams; // servlet initialization configuration parameters. key: name, value: (Map) initParam (key: param-name, value: param-value)
+
     private WebappClassLoader webappClassLoader;                // webappClassLoader
     private ContextFileChangeMonitor contextFileChangeMonitor;  // contextFileChangeMonitor: monitor on files change
     private Boolean reloadable;                                 // reloadable: whether context is reloadable
     private Host host;                                          // Host of this context
     private ServletContext servletContext;                      // servlet context
-    private Map<Class<?>, HttpServlet> servletPool;              // servlet pool
-
+    private Map<Class<?>, HttpServlet> servletPool;             // servlet pool
 
     /**
      * constructor
-     * @param path
-     * @param docBase
+     * @param path: url path
+     * @param docBase: system file directory
      */
     public Context(String path, String docBase, Boolean reloadable, Host host) {
         this.path = path;
         this.docBase = docBase;
         this.webXmlFile = new File(docBase, XMLParser.getWatchedResource());
-        this.servletNameToClassMap = new HashMap<String, String>();
-        this.servletClassToNameMap = new HashMap<String, String>();
-        this.servletUrlToNameMap = new HashMap<String, String>();
-        this.servletUrlToClassMap = new HashMap<String, String>();
+        this.servletNameToClassMap = new HashMap<>();
+        this.servletClassToNameMap = new HashMap<>();
+        this.servletUrlToNameMap = new HashMap<>();
+        this.servletUrlToClassMap = new HashMap<>();
+        this.servletInitParams = new HashMap<>();
         this.reloadable = reloadable;
         this.host = host;
         this.servletContext = new ApplicationContext(this);
@@ -77,10 +82,11 @@ public class Context {
      * getHttpServlet(Class) method will return the corresponding servlet of input class.
      * If the class is not existed, it will add this mapping to the servlet pool.
      * To prevent creating the same class-servlet mapping, the key word synchronized is used.
-     * @param clazz
+     * @param clazz: corresponding servlet class
      * @return HttpServlet
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws InstantiationException: InstantiationException
+     * @throws IllegalAccessException: IllegalAccessException
+     * @throws ServletException: ServletException
      */
     public synchronized HttpServlet getHttpServlet(Class<?> clazz) throws InstantiationException, IllegalAccessException, ServletException {
         if (this.servletPool.containsKey(clazz)) {
@@ -88,7 +94,15 @@ public class Context {
         }
 
         HttpServlet servlet = (HttpServlet) clazz.newInstance();
+        ServletContext servletContext = this.getServletContext();
+        String servletName = servletClassToNameMap.get(clazz.getName());        // servlet name
+        Map<String, String> initParams = servletInitParams.get(servletName);    // servlet init params
+
+        ServletConfig servletConfig = new StandardServletConfig(servletContext, servletName, initParams);
+        servlet.init(servletConfig);            // init servlet using servletConfig
+
         this.servletPool.put(clazz, servlet);
+
         return servlet;
     }
 
@@ -122,7 +136,12 @@ public class Context {
         }
 
         try {
-            parseWebXmlFile();
+            // read web.xml file
+            String webXml = FileUtil.readUtf8String(webXmlFile);
+            Document document = Jsoup.parse(webXml);
+
+            parseServletMapping(document);
+            parseServletInitConfig(document);
         } catch (WebConfigException webConfigException) {
             webConfigException.printStackTrace();
             return false;
@@ -132,12 +151,17 @@ public class Context {
     }
 
     /**
-     * Parse web.xml file to servlets' map
+     * Parse web.xml file to servlets' map:
+     *  This method aims to parse the servlet definition and the servlet-mapping definition.
+     *  <servlet></servlet>: contains servlet-name and corresponding java class in the webapp
+     *  <servlet-mapping></servlet-mapping>: contains servlet-name and corresponding url of the webapp
+     *  Parsing these two properties makes Context build relationships between servlet-name, servlet class, and servlet url
+     *
+     * @param document: web.xml file
+     * @throws WebConfigException: WebConfigException is the error happens during web configuration building
+     * @see SimpleTomcat.exception.WebConfigException
      */
-    private void parseWebXmlFile() throws WebConfigException {
-        // read web.xml file
-        String webXml = FileUtil.readUtf8String(webXmlFile);
-        Document document = Jsoup.parse(webXml);
+    private void parseServletMapping(Document document) throws WebConfigException {
 
         // parse context in <servlet></servlet>
         Elements servletElements = document.select("servlet");
@@ -161,7 +185,7 @@ public class Context {
         for (Element servlet : servletMappingElements) {
             String servletName = servlet.selectFirst("servlet-name").text();
             String urlPattern = servlet.selectFirst("url-pattern").text();
-            String servletClass = "";
+            String servletClass;
 
             if (servletNameToClassMap.containsKey(servletName)) servletClass = servletNameToClassMap.get(servletName);
             else throw new WebConfigException(
@@ -179,6 +203,41 @@ public class Context {
             else throw new WebConfigException(
                     StrUtil.format("servlet-url: {} duplicated. The servlet-url has to be unique.",
                             servletName));
+        }
+    }
+
+    /**
+     * Parse Servlet Initialization Configurations from web.xml in the webapp
+     *  The init. configurations will inside <servlet></servlet> block with <init-param></init-param> tag.
+     *  There are two properties: name and corresponding value. This method will parse these configs to servletInitParams.
+     *
+     * @param document: document: web.xml
+     */
+    private void parseServletInitConfig(Document document) {
+
+        // parse context in <servlet></servlet>
+        Elements servletElements = document.select("servlet");
+        for (Element servletElement : servletElements) {
+            String servletName = servletElement.selectFirst("servlet-name").text();
+            if (servletName == null || servletName.length() == 0) {
+                continue;
+            }
+
+            Map<String, String> initConfig = new HashMap<>(); // init config map. key: init-param name, value: init-param value
+            // parse init. configurations from <servlet></servlet>
+            Elements initParams = servletElement.select("init-param");
+            for (Element initParam : initParams) {
+                String paramName = initParam.selectFirst("param-name").text();
+                String paramValue = initParam.selectFirst("param-value").text();
+                if (paramName == null || paramValue == null || paramName.length() == 0 || paramValue.length() == 0) {
+                    continue;
+                }
+
+                initConfig.put(paramName, paramValue);
+            }
+            if (!initConfig.isEmpty()) {
+                servletInitParams.put(servletName, initConfig);
+            }
         }
     }
 
@@ -264,7 +323,7 @@ public class Context {
 
     /**
      * Check whether context is reloadable
-     * @return
+     * @return reloadable
      */
     public boolean isReloadable() {
         return reloadable;
@@ -272,7 +331,7 @@ public class Context {
 
     /**
      * Set reloadable property of webapp
-     * @param reloadable
+     * @param reloadable: whether context is reloadable by definition
      */
     public void setReloadable(boolean reloadable) {
         this.reloadable = reloadable;
@@ -284,6 +343,7 @@ public class Context {
     public void stop() {
         webappClassLoader.stop();
         contextFileChangeMonitor.stop();
+        destroyServlets();
     }
 
     /**
@@ -291,5 +351,15 @@ public class Context {
      */
     public void reload() {
         host.reload(this);
+    }
+
+    /**
+     * destroy servlets in the servlet pool
+     */
+    private void destroyServlets() {
+        Collection<HttpServlet> servlets = servletPool.values();
+        for (HttpServlet servlet : servlets) {
+            servlet.destroy();
+        }
     }
 }

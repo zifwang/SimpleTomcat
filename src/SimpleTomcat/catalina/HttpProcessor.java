@@ -12,6 +12,7 @@ import cn.hutool.log.LogFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * HttpProcessor object is used to execute web request
@@ -59,10 +60,10 @@ public class HttpProcessor {
     }
 
     /**
-     * handel 200 ok response
+     * handle 200 ok response
      * @param s: socket
      * @param response: response
-     * @throws IOException
+     * @throws IOException: IOException
      */
     private static void handle200(Socket s, Response response) throws IOException {
         String contentType = response.getContentType();
@@ -83,14 +84,14 @@ public class HttpProcessor {
      * Handle file not found response
      * @param s: socket
      * @param uri: uri
-     * @throws IOException
+     * @throws IOException: IOException
      */
     private static void handle404(Socket s, String uri) throws IOException {
         String headText = Constant.response_head_404;
         String responseText = StrUtil.format(Constant.html_404, uri, uri);
         responseText = headText + responseText;
         OutputStream outputStream = s.getOutputStream();
-        byte[] responseByte = responseText.getBytes("utf-8");
+        byte[] responseByte = responseText.getBytes(StandardCharsets.UTF_8);
         outputStream.write(responseByte);
     }
 
@@ -98,7 +99,7 @@ public class HttpProcessor {
      * Handle Internet Server Error
      * @param s: socket
      * @param exception: exception
-     * @throws IOException
+     * @throws IOException: IOException
      */
     private static void handle500(Socket s, Exception exception) {
         try {
@@ -113,11 +114,11 @@ public class HttpProcessor {
             }
 
             String msg = exception.getMessage();
-            if (null != msg && msg.length() > 20) msg = msg.substring(0, 19);
+            if (msg != null && msg.length() > 20) msg = msg.substring(0, 19);
 
             String text = StrUtil.format(Constant.html_500, msg, exception.toString(), stringBuilder.toString());
             text = Constant.response_head_500 + text;
-            byte[] responseBytes = text.getBytes("utf-8");
+            byte[] responseBytes = text.getBytes(StandardCharsets.UTF_8);
             OutputStream outputStream = s.getOutputStream();
             outputStream.write(responseBytes);
         } catch (IOException ioException) {

@@ -13,8 +13,8 @@ public class Bootstrap {
      *  The CommonClassLoader is used to ensure all libs are loaded into program by .bat or .sh files.
      *  Starting program by IDE, all external libs can be loaded. However, when the program is started by .bat or .sh file,
      *  external libs cannot be loaded. Same to Tomcat, a CommonClassLoader is developed to solve it.
-     * @param args
-     * @throws Exception
+     * @param args: args
+     * @throws Exception: Exception
      */
     public static void main(String[] args) throws Exception {
         CommonClassLoader commonClassLoader = new CommonClassLoader();

@@ -18,9 +18,9 @@ public class StandardServletConfig implements ServletConfig {
 
     /**
      * Constructor
-     * @param servletContext
-     * @param servletName
-     * @param initParameters
+     * @param servletContext: servlet context
+     * @param servletName: servlet name
+     * @param initParameters: init params
      */
     public StandardServletConfig(ServletContext servletContext, String servletName, Map<String, String> initParameters) {
         this.servletContext = servletContext;
