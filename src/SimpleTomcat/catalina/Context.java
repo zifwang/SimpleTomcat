@@ -21,9 +21,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Context object is used to store web services information:
@@ -45,6 +43,7 @@ public class Context {
     private Map<String, String> servletUrlToNameMap;            // map servlet url to name. key: url, value: name
     private Map<String, String> servletUrlToClassMap;           // map servlet url to class. key: url, value: name
     private Map<String, Map<String, String>> servletInitParams; // servlet initialization configuration parameters. key: name, value: (Map) initParam (key: param-name, value: param-value)
+    private List<String> loadOnStartupServletClassName;         // load on startup property
 
     private WebappClassLoader webappClassLoader;                // webappClassLoader
     private ContextFileChangeMonitor contextFileChangeMonitor;  // contextFileChangeMonitor: monitor on files change
@@ -71,6 +70,7 @@ public class Context {
         this.host = host;
         this.servletContext = new ApplicationContext(this);
         this.servletPool = new HashMap<>();
+        this.loadOnStartupServletClassName = new ArrayList<>();
 
         ClassLoader commonClassLoader = Thread.currentThread().getContextClassLoader();
         this.webappClassLoader = new WebappClassLoader(docBase, commonClassLoader);
@@ -107,6 +107,22 @@ public class Context {
     }
 
     /**
+     * Stop context by stop webappClassLoader and contextFileChangeMonitor
+     */
+    public void stop() {
+        webappClassLoader.stop();
+        contextFileChangeMonitor.stop();
+        destroyServlets();
+    }
+
+    /**
+     * Reload context by reload it in Host
+     */
+    public void reload() {
+        host.reload(this);
+    }
+
+    /**
      * Deploy web-app
      */
     private void deploy() {
@@ -126,6 +142,21 @@ public class Context {
     }
 
     /**
+     * handle the load on startup property
+     *  Create servlet after reading web.xml
+     */
+    public void handleLoadOnStartup() {
+        for (String servletClassName : loadOnStartupServletClassName) {
+            try {
+                Class<?> clazz = webappClassLoader.loadClass(servletClassName);
+                getHttpServlet(clazz);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ServletException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * init web-app: by reading web.xml file
      * @return success or not
      */
@@ -140,8 +171,14 @@ public class Context {
             String webXml = FileUtil.readUtf8String(webXmlFile);
             Document document = Jsoup.parse(webXml);
 
+            // parse servlet mapping
             parseServletMapping(document);
+            // parse servlet init. config.
             parseServletInitConfig(document);
+            // parse servlet load on startup property
+            parseServletLoadOnStartup(document);
+            // handle load on startup
+            handleLoadOnStartup();
         } catch (WebConfigException webConfigException) {
             webConfigException.printStackTrace();
             return false;
@@ -241,6 +278,32 @@ public class Context {
         }
     }
 
+    /**
+     * Servlet can be configured to start up while loading in web.xml
+     *  <load-on-startup></load-on-startup> tag aims to define this property
+     * @param document: web.xml
+     */
+    private void parseServletLoadOnStartup(Document document) {
+        Elements elements = document.select("load-on-startup");
+        for (Element element : elements) {
+            String servletClassName = element.parent().select("servlet-class").text();
+            if (servletClassName == null || servletClassName.length() == 0) {
+                continue;
+            }
+            this.loadOnStartupServletClassName.add(servletClassName);
+        }
+    }
+
+    /**
+     * destroy servlets in the servlet pool
+     */
+    private void destroyServlets() {
+        Collection<HttpServlet> servlets = servletPool.values();
+        for (HttpServlet servlet : servlets) {
+            servlet.destroy();
+        }
+    }
+
     public void setPath(String path) {
         this.path = path;
     }
@@ -337,29 +400,4 @@ public class Context {
         this.reloadable = reloadable;
     }
 
-    /**
-     * Stop context by stop webappClassLoader and contextFileChangeMonitor
-     */
-    public void stop() {
-        webappClassLoader.stop();
-        contextFileChangeMonitor.stop();
-        destroyServlets();
-    }
-
-    /**
-     * Reload context by reload it in Host
-     */
-    public void reload() {
-        host.reload(this);
-    }
-
-    /**
-     * destroy servlets in the servlet pool
-     */
-    private void destroyServlets() {
-        Collection<HttpServlet> servlets = servletPool.values();
-        for (HttpServlet servlet : servlets) {
-            servlet.destroy();
-        }
-    }
 }
