@@ -1,5 +1,7 @@
 package SimpleTomcat.util;
 
+import cn.hutool.http.HttpUtil;
+
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -14,22 +16,48 @@ import java.util.Set;
  */
 public class MiniBrowser {
     /**
-     * get SimpleTomcat.http.http response's content in byte type
+     * get SimpleTomcat.http.http response's content in byte type.
+     * gzip off, no params, get method
      * @param url: url
      * @return
      */
     public static byte[] getContentBytes(String url) {
-        return getContentBytes(url, false);
+        return getContentBytes(url, false, null, true);
+    }
+
+    /**
+     * get SimpleTomcat.http.http response's content in byte type.
+     * no params, get method
+     * @param url: url
+     * @param isGzip: gzip
+     * @return
+     */
+    public static byte[] getContentBytes(String url, boolean isGzip) {
+        return getContentBytes(url, isGzip, null, true);
+    }
+
+    /**
+     * get SimpleTomcat.http.http response's content in byte type.
+     * Gzip flag off
+     * @param url: url
+     * @param params: data from clients (from get or post request)
+     * @param isGet: isGetMethod
+     * @return
+     */
+    public static byte[] getContentBytes(String url, Map<String, Object> params, boolean isGet) {
+        return getContentBytes(url, false, params, isGet);
     }
 
     /**
      * get SimpleTomcat.http.http response's content in byte type with data been zipped flag
      * @param url: url
      * @param is_gzip: data is zipped ?
+     * @param params: data from clients (from get or post request)
+     * @param isGet: isGetMethod
      * @return
      */
-    public static byte[] getContentBytes(String url, boolean is_gzip) {
-        byte[] response = getHttpBytes(url, is_gzip);
+    public static byte[] getContentBytes(String url, boolean is_gzip, Map<String, Object> params, boolean isGet) {
+        byte[] response = getHttpBytes(url, is_gzip, params, isGet);
         byte[] doubleReturn = "\r\n\r\n".getBytes();
 
         int pos = -1;
@@ -54,17 +82,40 @@ public class MiniBrowser {
      * @return
      */
     public static String getContentString(String url) {
-        return getContentString(url, false);
+        return getContentString(url, false, null, true);
+    }
+
+    /**
+     * get SimpleTomcat.http.http response's content in string type
+     * @param url: url
+     * @param isGzip: gzip
+     * @return
+     */
+    public static String getContentString(String url, boolean isGzip) {
+        return getContentString(url, isGzip, null, true);
+    }
+
+    /**
+     * get SimpleTomcat.http.http response's content in string type with gzip off
+     * @param url: url
+     * @param params: data from clients (from get or post request)
+     * @param isGet: isGetMethod
+     * @return
+     */
+    public static String getContentString(String url, Map<String, Object> params, boolean isGet) {
+        return getContentString(url, false, params, isGet);
     }
 
     /**
      * get SimpleTomcat.http.http response's content in string type with data been zipped flag
      * @param url: url
      * @param is_gzip: data is zipped ?
+     * @param params: data from clients (from get or post request)
+     * @param isGet: isGetMethod
      * @return
      */
-    public static String getContentString(String url, boolean is_gzip) {
-        byte[] content = getContentBytes(url, is_gzip);
+    public static String getContentString(String url, boolean is_gzip, Map<String, Object> params, boolean isGet) {
+        byte[] content = getContentBytes(url, is_gzip, params, isGet);
         if (content == null) return null;
 
         try {
@@ -75,68 +126,121 @@ public class MiniBrowser {
     }
 
     /**
-     * get SimpleTomcat.http.http response in string type
+     * get HttpString method with only url and gzip as input.
+     * The default http method is get and no data from client
+     * @param url: url
+     * @param gzip: gzip flag
+     * @return
+     */
+    public static String getHttpString(String url, boolean gzip) {
+        return getHttpString(url, false, null, true);
+    }
+
+    /**
+     * get HttpString method with only url as input and default to gzip off, no parameters data from client, and get method
      * @param url: url
      * @return
      */
     public static String getHttpString(String url) {
-        return getHttpString(url, false);
+        return getHttpString(url, false, null, true);
     }
 
     /**
-     * get SimpleTomcat.http.http response in string type with data been zipped flag
+     * get SimpleTomcat.http.http response in string type
+     * With three inputs. Gzip is default to off
      * @param url: url
-     * @param is_gzip: data is zipped ?
+     * @param params: data from client
+     * @param isGet: is http get
      * @return
      */
-    public static String getHttpString(String url, boolean is_gzip) {
-        return new String(getHttpBytes(url, is_gzip)).trim();
+    public static String getHttpString(String url, Map<String, Object> params, boolean isGet) {
+        return getHttpString(url, false, params, isGet);
+    }
+
+    /**
+     * get SimpleTomcat.http. http response in string type with data been zipped flag
+     * With four inputs can be arbitrate
+     * @param url: url
+     * @param is_gzip: data is zipped ?
+     * @param params: data from client
+     * @param isGet: is http get
+     * @return
+     */
+    public static String getHttpString(String url, boolean is_gzip, Map<String, Object> params, boolean isGet) {
+        return new String(getHttpBytes(url, is_gzip, params, isGet)).trim();
     }
 
     /**
      * get SimpleTomcat.http response in byte type with data been zipped flag
-     * @param url
+     * @param url: web url
+     * @param is_gzip: is gzip enabled
+     * @param params: data from clients (from get or post request)
+     * @param isGet: isGetMethod
      * @return
      */
-    public static byte[] getHttpBytes(String url, boolean is_gzip) {
+    public static byte[] getHttpBytes(String url, boolean is_gzip, Map<String, Object> params, boolean isGet) {
+        String method = isGet ? Constant.HttpGet: Constant.HttpPost;    // assign http method
+
         byte[] httpResponse = null;
 
         try {
             URL u = new URL(url);           // create url by given url address
             Socket client = new Socket();   // define socket client
-            int port = u.getPort();         // define port number of connection
 
-            if (port == -1) port = 80;      // if port is not set, set port number to 80
+            int port = u.getPort();         // define port number of connection
+            if (port == -1) {
+                port = 80;                  // if port is not set, set port number to 80
+            }
+
             // Create a socket address from a hostname and a port number.
             InetSocketAddress inetSocketAddress = new InetSocketAddress(u.getHost(), port);
             // Create sock connection with socket address and timeout
             client.connect(inetSocketAddress, 1000);
+            
             // Create SimpleTomcat.http.http request header in HashMap type. key - header name, value - value of header name
             // e.g. Host: 127.0.0.1, Accept: text/html, Connection: close, User-Agent: chrome
-            Map<String, String> requestHeaders = new HashMap<String, String>();
+            Map<String, String> requestHeaders = new HashMap<>();
             requestHeaders.put("Host", u.getHost() + ":" + port);
             requestHeaders.put("Accept", "text/html");
             requestHeaders.put("Connection", "close");
             requestHeaders.put("User-Agent", "my mini browser / java1.8");
+
             // whether gzip data is used
             if (is_gzip) requestHeaders.put("Accept-Encoding", "gzip");
 
             // Define path
             String path = u.getPath();
-            if (path.length() == 0) path = "/";
+            if (path.length() == 0) {
+                path = "/";
+            }
+
+            // Method Get: construct get message. The post
+            if (params != null && method == Constant.HttpGet) {
+                String paramsString = HttpUtil.toParams(params);
+                path = path + "?" + paramsString;
+            }
 
             // Create Http Response String
             StringBuffer httpRequestString = new StringBuffer();
-            httpRequestString.append("GET " + path + " HTTP/1.1\r\n");
+            String firstLine = method + " " + path + " HTTP/1.1\r\n";
+            httpRequestString.append(firstLine);
             Set<String> headers = requestHeaders.keySet();
             for (String header : headers) {
                 String headerLine = header + ":" + requestHeaders.get(header)+ "\r\n";
                 httpRequestString.append(headerLine);
             }
 
+            // Method Post: construct post message. The post data will always exists in the last of a HTTP request string
+            if (params != null && method == Constant.HttpPost) {
+                String paramsString = HttpUtil.toParams(params);
+                httpRequestString.append("\r\n");
+                httpRequestString.append(paramsString);
+            }
+
             PrintWriter printWriter = new PrintWriter(client.getOutputStream(), true);
             printWriter.println(httpRequestString);
             InputStream is = client.getInputStream();
+
             httpResponse = readBytes(is, true);
             client.close();
 

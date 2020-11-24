@@ -3,23 +3,31 @@ package SimpleTomcat.http;
 import SimpleTomcat.catalina.Context;
 import SimpleTomcat.catalina.Service;
 import SimpleTomcat.util.MiniBrowser;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple HTTP Request Object
  */
 public class Request extends BaseRequest{
-    private String requestString;   // http request string
-    private String uri;             // http uri
-    private String method;          // http method;
-    private Context context;
-    private Service service;
-    private Socket socket;
+    private String requestString;                   // http request string
+    private String uri;                             // http uri
+    private String method;                          // http method;
+    private Context context;                        // Context object is used to store web services information
+    private Service service;                        // Service object provided web services
+    private Socket socket;                          // socket: client-server message transportation
+    private String queryString;                     // data String from client. e.g. http://127.0.0.1:8080/hello?name=a, the queryString is name=a
+    private Map<String, String[]> parameterMap;     // parameterMap: contains data from client to server which is parsed from queryString
 
     /**
      * Constructor
@@ -29,15 +37,27 @@ public class Request extends BaseRequest{
     public Request(Socket socket, Service service) throws IOException {
         this.socket = socket;
         this.service = service;
+        this.parameterMap = new HashMap<>();
+
+        // parse http request
         parseHttpRequest();
-        if (StrUtil.isEmpty(this.requestString)) return;
+        if (StrUtil.isEmpty(this.requestString)) {
+            return;
+        }
+        // parse uri
         parseUri();
+        // parse method
         parseMethod();
+        // parse context
         parseContext();
         if (!this.context.getPath().equals("/")) {
             this.uri = StrUtil.removePrefix(this.uri, this.context.getPath());
-            if (StrUtil.isEmpty(this.uri)) this.uri = "/";
+            if (StrUtil.isEmpty(this.uri)) {
+                this.uri = "/";
+            }
         }
+        // parse parameters
+        parseParameters();
     }
 
     public String getUri() {
@@ -65,6 +85,31 @@ public class Request extends BaseRequest{
     @Override
     public String getRealPath(String path) {
         return getServletContext().getRealPath(path);
+    }
+
+    @Override
+    public String getParameter(String name) {
+        if (!parameterMap.containsKey(name)) {
+            return null;
+        }
+
+        String values[] = parameterMap.get(name);
+        return values[0];
+    }
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return parameterMap;
+    }
+
+    @Override
+    public Enumeration<String> getParameterNames() {
+        return Collections.enumeration(parameterMap.keySet());
+    }
+
+    @Override
+    public String[] getParameterValues(String name) {
+        return parameterMap.get(name);
     }
 
     /**
@@ -113,6 +158,48 @@ public class Request extends BaseRequest{
      */
     private void parseMethod() {
         this.method = StrUtil.subBefore(this.requestString, " ", false);
+    }
+
+    /**
+     * parse client's data (parameters) to server
+     */
+    private void parseParameters() {
+        // GET Method
+        if (this.method.equals("GET")) {
+            String url = StrUtil.subBetween(this.requestString, " ", " ");
+            if (StrUtil.contains(url, '?')) {
+                this.queryString = StrUtil.subAfter(url, "?", false);
+            }
+        }
+
+        // Post Method
+        if (this.method.equals("POST")) {
+            this.queryString = StrUtil.subAfter(requestString, "\r\n\r\n", false);
+        }
+
+        if (this.queryString == null) {
+            return;
+        }
+
+        // QueryString -> parameterMap
+        queryString = URLUtil.decode(queryString);
+        String[] paramPairs = queryString.split("&");
+        if (paramPairs != null) {
+            for (String paramPair : paramPairs) {
+                String[] param = paramPair.split("=");
+                String key = param[0];
+                String value = param[1];
+
+                String[] values;
+                if (parameterMap.containsKey(key)) {
+                    values = parameterMap.get(key);
+                    values = ArrayUtil.append(values, value);
+                } else {
+                    values = new String[]{value};
+                }
+                parameterMap.put(key, values);
+            }
+        }
     }
 
 }

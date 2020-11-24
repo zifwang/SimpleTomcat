@@ -61,4 +61,8 @@ public class Constant {
     public static final int CODE_302 = 302;
     public static final int CODE_404 = 404;
     public static final int CODE_500 = 500;
+
+    // Http Request Method
+    public static final String HttpGet = "GET";
+    public static final String HttpPost = "POST";
 }
