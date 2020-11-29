@@ -1,8 +1,17 @@
 package SimpleTomcat.http;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
+
+import javax.servlet.http.Cookie;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A Simple Http Response Object
@@ -12,7 +21,8 @@ public class Response extends BaseResponse{
     private PrintWriter printWriter;            // to write data into stringWriter
     private String contentType;                 // header: content-type
     private byte[] body;                        // response body
-    private int status;                      // status
+    private int status;                         // status
+    private List<Cookie> cookies;               // cookies
 
     /**
      * Constructor. Set contentType to "text/html"
@@ -21,12 +31,15 @@ public class Response extends BaseResponse{
         this.stringWriter = new StringWriter();
         this.printWriter = new PrintWriter(this.stringWriter, true);    // open the autoFlush to automatically write printWriter to stringWriter
         this.contentType = "text/html";
+        this.cookies = new ArrayList<>();
     }
 
+    @Override
     public void setContentType(String mineType) {
         this.contentType = mineType;
     }
 
+    @Override
     public String getContentType() {
         return this.contentType;
     }
@@ -46,8 +59,18 @@ public class Response extends BaseResponse{
      * Use the autoFlush provided from PrintWriter to put data into stringWriter
      * @return
      */
+    @Override
     public PrintWriter getWriter() {
         return this.printWriter;
+    }
+
+    @Override
+    public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
+    }
+
+    public List<Cookie> getCookies() {
+        return this.cookies;
     }
 
     /**
@@ -65,4 +88,31 @@ public class Response extends BaseResponse{
         this.body = body;
     }
 
+    public String getCookiesHeader() {
+        if (cookies == null) {
+            return "";
+        }
+
+        String pattern = "EEE, d MMM yyyy HH:mm:ss 'GMT'";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+        // build cookies header
+        StringBuffer cookiesHeader = new StringBuffer();
+        for (Cookie cookie : cookies) {
+            cookiesHeader.append("\r\n");
+            cookiesHeader.append("Set-Cookie: ");
+            cookiesHeader.append(cookie.getName() + "=" + cookie.getValue() + "; ");
+            if (cookie.getMaxAge() != -1) {
+                cookiesHeader.append("Expires=");
+                Date now = new Date();
+                Date expire = DateUtil.offset(now, DateField.MINUTE, cookie.getMaxAge());
+                cookiesHeader.append(simpleDateFormat.format(expire));
+                cookiesHeader.append(";");
+            }
+            if (cookie.getPath() != null) {
+                cookiesHeader.append("Path=" + cookie.getPath());
+            }
+        }
+
+        return cookiesHeader.toString();
+    }
 }

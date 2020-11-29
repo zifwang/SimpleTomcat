@@ -182,6 +182,12 @@ public class TestSimpleTomcat {
         Assert.assertEquals(html, "my mini browser / java1.8");
     }
 
+    @Test
+    public void testsetCookie() {
+        String html = getHttpString("/javaweb/setCookie");
+        containAssert(html, "Set-Cookie: name=Gareen(cookie); Expires=");
+    }
+
     private byte[] getContentBytes(String uri) {
         return getContentBytes(uri,false);
     }
