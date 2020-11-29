@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 
@@ -136,6 +137,100 @@ public class Request extends BaseRequest{
     @Override
     public int getIntHeader(String name) {
         return Convert.toInt(headerMap.get(name), 0);
+    }
+
+    @Override
+    public String getLocalAddr() {
+        return socket.getLocalAddress().getHostAddress();
+    }
+
+    @Override
+    public String getLocalName() {
+        return socket.getLocalAddress().getHostName();
+    }
+
+    @Override
+    public int getLocalPort() {
+        return socket.getLocalPort();
+    }
+
+    @Override
+    public String getProtocol() {
+        return "HTTP:/1.1";
+    }
+
+    @Override
+    public String getRemoteAddr() {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+        String remoteAddr = inetSocketAddress.getAddress().toString();
+        return StrUtil.subAfter(remoteAddr, "/", false);
+    }
+
+    @Override
+    public String getRemoteHost() {
+        InetSocketAddress inetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+        return inetSocketAddress.getHostName();
+    }
+
+    @Override
+    public int getRemotePort() {
+        return socket.getPort();
+    }
+
+    @Override
+    public String getScheme() {
+        return "http";
+    }
+
+    @Override
+    public String getServerName() {
+        return getHeader("host").trim();
+    }
+
+    @Override
+    public int getServerPort() {
+        return getLocalPort();
+    }
+
+    @Override
+    public String getContextPath() {
+        String contextPath = this.context.getPath();
+        if (contextPath.equals("/")) {
+            return "";
+        }
+        return contextPath;
+    }
+
+    @Override
+    public String getRequestURI() {
+        return uri;
+    }
+
+    @Override
+    public StringBuffer getRequestURL() {
+        String scheme = getScheme();
+        int port = getServerPort();
+        if (port < 0) {
+            port = 80;
+        }
+
+        // build request url;
+        StringBuffer url = new StringBuffer();
+        url.append(scheme);
+        url.append("://");
+        url.append(getServerName());
+        if ((scheme.equals("http") && (port != 80)) || (scheme.equals("https") && (port != 443))) {
+            url.append(":");
+            url.append(port);
+        }
+        url.append(getRequestURI());
+
+        return url;
+    }
+
+    @Override
+    public String getServletPath() {
+        return uri;
     }
 
     /**
