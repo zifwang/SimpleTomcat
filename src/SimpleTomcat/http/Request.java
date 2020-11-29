@@ -28,6 +28,7 @@ public class Request extends BaseRequest{
     private Socket socket;                          // socket: client-server message transportation
     private String queryString;                     // data String from client. e.g. http://127.0.0.1:8080/hello?name=a, the queryString is name=a
     private Map<String, String[]> parameterMap;     // parameterMap: contains data from client to server which is parsed from queryString
+    private Map<String, String> headerMap;          // headerMap: contains info about client's system
 
     /**
      * Constructor
@@ -38,6 +39,7 @@ public class Request extends BaseRequest{
         this.socket = socket;
         this.service = service;
         this.parameterMap = new HashMap<>();
+        this.headerMap = new HashMap<>();
 
         // parse http request
         parseHttpRequest();
@@ -200,6 +202,13 @@ public class Request extends BaseRequest{
                 parameterMap.put(key, values);
             }
         }
+    }
+
+    /**
+     * parse header info
+     */
+    private void parseHeader() {
+
     }
 
 }
