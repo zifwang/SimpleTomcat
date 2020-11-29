@@ -176,6 +176,12 @@ public class TestSimpleTomcat {
         Assert.assertEquals(html,"post name: meepo");
     }
 
+    @Test
+    public void testHeader() {
+        String html = getContentString("/javaweb/header");
+        Assert.assertEquals(html, "my mini browser / java1.8");
+    }
+
     private byte[] getContentBytes(String uri) {
         return getContentBytes(uri,false);
     }

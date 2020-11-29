@@ -3,18 +3,19 @@ package SimpleTomcat.http;
 import SimpleTomcat.catalina.Context;
 import SimpleTomcat.catalina.Service;
 import SimpleTomcat.util.MiniBrowser;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
+import javax.management.monitor.StringMonitor;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A simple HTTP Request Object
@@ -60,6 +61,9 @@ public class Request extends BaseRequest{
         }
         // parse parameters
         parseParameters();
+        // parse headers
+        parseHeader();
+        System.out.println(headerMap);
     }
 
     public String getUri() {
@@ -112,6 +116,26 @@ public class Request extends BaseRequest{
     @Override
     public String[] getParameterValues(String name) {
         return parameterMap.get(name);
+    }
+
+    @Override
+    public String getHeader(String name) {
+        if (name == null) {
+            return null;
+        }
+
+        name = name.toLowerCase();
+        return headerMap.get(name);
+    }
+
+    @Override
+    public Enumeration getHeaderNames() {
+        return Collections.enumeration(headerMap.keySet());
+    }
+
+    @Override
+    public int getIntHeader(String name) {
+        return Convert.toInt(headerMap.get(name), 0);
     }
 
     /**
@@ -208,7 +232,23 @@ public class Request extends BaseRequest{
      * parse header info
      */
     private void parseHeader() {
+        StringReader stringReader = new StringReader(requestString);
+        List<String> lines = new ArrayList<>();
+        IoUtil.readLines(stringReader, lines);
 
+        // Start from the second line because the first line is http url
+        for (int i = 1; i < lines.size(); i++) {
+            String line = lines.get(i);
+
+            // End of request header
+            if (line.length() == 0) {
+                break;
+            }
+            String[] infos = line.split(":");
+            String headerName = infos[0].toLowerCase();
+            String headerVal = infos[1];
+            headerMap.put(headerName, headerVal);
+        }
     }
 
 }
