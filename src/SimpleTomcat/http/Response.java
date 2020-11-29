@@ -88,6 +88,16 @@ public class Response extends BaseResponse{
         this.body = body;
     }
 
+    /**
+     * GetCookiesHeader() is used to create cookie from client's info
+     *  Cookie is a way to transfer information or data between client(web browser) and server.
+     *  Cookie is created by server, but will not store in the server. After finishing creation,
+     *  server will send cookie to client's web browser. And client's web browser will store these cookies locally.
+     *  Web browser will resend cookies to server when user browse web site.
+     *  It is HttpServletResponse's responsibility to create the cookie when user first in the web site.
+     *  So, getCookiesHeader() method aims to do this job.
+     * @return
+     */
     public String getCookiesHeader() {
         if (cookies == null) {
             return "";

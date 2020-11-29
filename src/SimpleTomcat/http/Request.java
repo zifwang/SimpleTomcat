@@ -11,6 +11,7 @@ import cn.hutool.core.util.URLUtil;
 
 import javax.management.monitor.StringMonitor;
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -31,6 +32,7 @@ public class Request extends BaseRequest{
     private String queryString;                     // data String from client. e.g. http://127.0.0.1:8080/hello?name=a, the queryString is name=a
     private Map<String, String[]> parameterMap;     // parameterMap: contains data from client to server which is parsed from queryString
     private Map<String, String> headerMap;          // headerMap: contains info about client's system
+    private Cookie[] cookies;                       // cookie: request must be able to accept cookie from client's web browser
 
     /**
      * Constructor
@@ -64,7 +66,8 @@ public class Request extends BaseRequest{
         parseParameters();
         // parse headers
         parseHeader();
-        System.out.println(headerMap);
+        // parse cookie: cookie is contained in headerMap with key = cookie
+        parseCookies();
     }
 
     public String getUri() {
@@ -137,6 +140,11 @@ public class Request extends BaseRequest{
     @Override
     public int getIntHeader(String name) {
         return Convert.toInt(headerMap.get(name), 0);
+    }
+
+    @Override
+    public Cookie[] getCookies() {
+        return cookies;
     }
 
     @Override
@@ -344,6 +352,26 @@ public class Request extends BaseRequest{
             String headerVal = infos[1];
             headerMap.put(headerName, headerVal);
         }
+    }
+
+    /**
+     * accept cookies from client's web browser and parse cookies to a cookie list
+     */
+    private void parseCookies() {
+        List<Cookie> cookieList = new ArrayList<>();
+        String cookies = headerMap.get("cookie");
+        if (cookies != null) {
+            String[] pairs = StrUtil.split(cookies, ";");
+            for (String pair : pairs) {
+                if (StrUtil.isBlank(pair)) {
+                    continue;
+                }
+                String[] infos = StrUtil.split(pair, "=");
+                Cookie cookie = new Cookie(infos[0].trim(), infos[1].trim());
+                cookieList.add(cookie);
+            }
+        }
+        this.cookies = ArrayUtil.toArray(cookieList, Cookie.class);
     }
 
 }
