@@ -5,10 +5,12 @@ import SimpleTomcat.http.Response;
 import SimpleTomcat.servlet.DefaultServlet;
 import SimpleTomcat.servlet.InvokeServlet;
 import SimpleTomcat.util.Constant;
+import SimpleTomcat.util.SessionManager;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -29,7 +31,13 @@ public class HttpProcessor {
             // create response
             Response response = new Response();
             String uri = request.getUri();
-            if (uri == null) return;
+            if (uri == null) {
+                return;
+            }
+
+            // create session or get session
+            prepareSession(request, response);
+
             String servletClassName = request.getContext().getServletClassByUrl(uri);
 
             if (servletClassName != null) InvokeServlet.getInstance().service(request, response);
@@ -57,6 +65,20 @@ public class HttpProcessor {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * prepare session.
+     *  First, get sessionId from cookie.
+     *  Second, create session or get session from SessionManager.
+     *  Third, set this session to request.
+     * @param request: http request
+     * @param response: http response
+     */
+    public static void prepareSession(Request request, Response response) {
+        String sessionId = request.getJSessionIdFromCookie();
+        HttpSession session = SessionManager.getSession(sessionId, request, response);
+        request.setSession(session);
     }
 
     /**

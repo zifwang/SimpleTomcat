@@ -12,6 +12,7 @@ import cn.hutool.core.util.URLUtil;
 import javax.management.monitor.StringMonitor;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -33,6 +34,7 @@ public class Request extends BaseRequest{
     private Map<String, String[]> parameterMap;     // parameterMap: contains data from client to server which is parsed from queryString
     private Map<String, String> headerMap;          // headerMap: contains info about client's system
     private Cookie[] cookies;                       // cookie: request must be able to accept cookie from client's web browser
+    private HttpSession session;                    // session
 
     /**
      * Constructor
@@ -239,6 +241,33 @@ public class Request extends BaseRequest{
     @Override
     public String getServletPath() {
         return uri;
+    }
+
+    @Override
+    public HttpSession getSession() {
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
+    }
+
+    /**
+     * Get sessionId from cookie
+     * @return
+     */
+    public String getJSessionIdFromCookie() {
+        if (cookies == null) {
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("JSESSIONID")) {
+                return cookie.getValue();
+            }
+        }
+
+        return null;
     }
 
     /**

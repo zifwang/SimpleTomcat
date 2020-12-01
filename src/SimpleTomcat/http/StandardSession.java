@@ -1,20 +1,39 @@
 package SimpleTomcat.http;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * StandardSession object is the session in the Simple Tomcat.
+ *  When a user browser the web page provided by Simple Tomcat, the Simple Tomcat will create a session which lasts unit
+ *  user exits or existed time reaches the default timeout.
+ *  Session can be viewed as a chat between client and server. The data will store in the attributesMap shared by server
+ *  and client.
+ */
 public class StandardSession implements HttpSession {
     private Map<String, Object> attributesMap;  // where session store data
     private String sessionId;                   // current session's id (unique)
     private long creationTime;                  // create time
-    private long lastAccessedTime;              // last access time. default time 30 minutes. if user don't login, session will automatically become invalid
+    private long lastAccessedTime;              // last access time. default time 30 second. if user don't login, session will automatically become invalid
     private ServletContext servletContext;      // servlet context
     private int maxInactiveInterval;            // max inactive interval
+
+    /**
+     * Constructor
+     * @param sessionId: session id
+     * @param servletContext: servlet context
+     */
+    public StandardSession(String sessionId, ServletContext servletContext) {
+        this.attributesMap = new HashMap<>();
+        this.sessionId = sessionId;
+        this.creationTime = System.currentTimeMillis();
+        this.servletContext = servletContext;
+    }
 
     @Override
     public long getCreationTime() {
@@ -29,6 +48,10 @@ public class StandardSession implements HttpSession {
     @Override
     public long getLastAccessedTime() {
         return this.lastAccessedTime;
+    }
+
+    public void setLastAccessedTime(long lastAccessedTime) {
+        this.lastAccessedTime = lastAccessedTime;
     }
 
     @Override
