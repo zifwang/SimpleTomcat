@@ -45,7 +45,11 @@ public class InvokeServlet extends HttpServlet {
             ReflectUtil.invoke(servletObject, "service", request, response);
 
             // set response status
-            response.setStatus(Constant.CODE_200);
+            if (response.getRedirectPath() != null) {
+                response.setStatus(Constant.CODE_302);
+            } else {
+                response.setStatus(Constant.CODE_200);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

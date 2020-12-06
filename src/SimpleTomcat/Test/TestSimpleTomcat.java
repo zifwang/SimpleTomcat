@@ -238,6 +238,14 @@ public class TestSimpleTomcat {
         Assert.assertEquals(html, "hello jsp@javaweb");
     }
 
+    @Test
+    public void testClientJump(){
+        String http_servlet = getHttpString("/javaweb/jump1");
+        containAssert(http_servlet,"HTTP/1.1 302 Found");
+        String http_jsp = getHttpString("/javaweb/jump1.jsp");
+        containAssert(http_jsp,"HTTP/1.1 302 Found");
+    }
+
     private byte[] getContentBytes(String uri) {
         return getContentBytes(uri,false);
     }

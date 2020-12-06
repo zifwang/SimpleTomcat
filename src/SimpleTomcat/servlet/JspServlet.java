@@ -84,7 +84,11 @@ public class JspServlet extends HttpServlet {
                 HttpServlet servlet = context.getHttpServlet(jspServletClass);
                 servlet.service(request, response);
 
-                response.setStatus(Constant.CODE_200);
+                if (response.getRedirectPath() != null) {
+                    response.setStatus(Constant.CODE_302);
+                } else {
+                    response.setStatus(Constant.CODE_200);
+                }
             } else {
                 response.setStatus(Constant.CODE_404);
             }

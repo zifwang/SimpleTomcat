@@ -11,6 +11,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.log.LogFactory;
+import org.apache.tomcat.util.bcel.Const;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -55,6 +56,10 @@ public class HttpProcessor {
 
             if (response.getStatus() == Constant.CODE_200) {
                 handle200(socket, request, response);
+                return;
+            }
+            else if (response.getStatus() == Constant.CODE_302) {
+                handle302(socket, response);
                 return;
             }
             else if (response.getStatus() == Constant.CODE_404) {
@@ -125,6 +130,20 @@ public class HttpProcessor {
         outputStream.write(responseBytes, 0, responseBytes.length);
         outputStream.flush();
         outputStream.close();
+    }
+
+    /**
+     * Handle client jump
+     * @param socket: socket
+     * @param response: response
+     */
+    private void handle302(Socket socket, Response response) throws IOException {
+        String redirectPath = response.getRedirectPath();
+        String head_text = Constant.response_head_302;
+        String header = StrUtil.format(head_text, redirectPath);
+        byte[] responseBytes = header.getBytes("utf-8");
+        OutputStream outputStream = socket.getOutputStream();
+        outputStream.write(responseBytes);
     }
 
     /**

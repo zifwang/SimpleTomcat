@@ -12,7 +12,10 @@ public class Constant {
     public final static String response_head_200 = "HTTP/1.1 200 OK\r\n" + "Content-Type: {}{}\r\n\r\n";
     public final static String response_head_200_gzip = "HTTP/1.1 200 OK\r\nContent-Type: {}{}\r\n" +
             "Content-Encoding:gzip" +
-            "\r\n\r\n";;
+            "\r\n\r\n";
+
+    // 302 http response header: client jump
+    public static final String response_head_302 = "HTTP/1.1 302 Found\r\nLocation: {}\r\n\r\n";
 
     // 404 http response header: file not found
     public final static String response_head_404 = "HTTP/1.1 404 Not Found\r\n" + "Content-Type: text/html\r\n\r\n";
@@ -60,10 +63,10 @@ public class Constant {
     public final static File contextXMLFile = new File(confFolder, "context.xml");      // context.xml
 
     // Http Code
-    public static final int CODE_200 = 200;
-    public static final int CODE_302 = 302;
-    public static final int CODE_404 = 404;
-    public static final int CODE_500 = 500;
+    public static final int CODE_200 = 200;     // Transmission Success
+    public static final int CODE_302 = 302;     // Client Jump
+    public static final int CODE_404 = 404;     // File Not Found
+    public static final int CODE_500 = 500;     // Internal Server Error
 
     // Http Request Method
     public static final String HttpGet = "GET";
