@@ -1,6 +1,5 @@
 package SimpleTomcat.catalina;
 
-
 import SimpleTomcat.util.ThreadPoolUtil;
 import cn.hutool.log.LogFactory;
 
@@ -10,27 +9,81 @@ import java.net.Socket;
 
 /**
  * Connector Object is used for listening on multiple ports
+ *  Connector implements gzip. Usually, the data transform between clients and server are text which
+ *  is able to zip efficiently. After gzip files, the transformation rate will increase.
+ *  Gzip is one way to zip files and it is also the way that tomcat does.
  */
 public class Connector implements Runnable {
-    private int port;           // port number
-    private Service service;    // service provided by server
+    private int port;                       // port number
+    private Service service;                // service provided by server
+    private String compression;             // compression: indicate whether zip file is used
+    private int compressionMinSize;         // minimal compression size
+    private String noCompressionUserAgents; // browser user can not use compression
+    private String compressionMimeType;     // MimeType stands for file type. This is indicate which file can be compressed
+
+    public Connector() {
+    }
 
     public Connector(int port, Service service) {
         this.port = port;
         this.service = service;
     }
 
+    public Connector(int port, Service service, String compression, int compressionMinSize, String noCompressionUserAgents, String compressionMimeType) {
+        this.port = port;
+        this.service = service;
+        this.compression = compression;
+        this.compressionMinSize = compressionMinSize;
+        this.noCompressionUserAgents = noCompressionUserAgents;
+        this.compressionMimeType = compressionMimeType;
+    }
+
     public void setPort(int port) {
         this.port = port;
     }
+
     public int getPort() {
         return this.port;
     }
+
     public void setService(Service service) {
         this.service = service;
     }
+
     public Service getService() {
         return this.service;
+    }
+
+    public String getCompression() {
+        return this.compression;
+    }
+
+    public void setCompression(String compression) {
+        this.compression = compression;
+    }
+
+    public int getCompressionMinSize() {
+        return compressionMinSize;
+    }
+
+    public void setCompressionMinSize(int compressionMinSize) {
+        this.compressionMinSize = compressionMinSize;
+    }
+
+    public String getNoCompressionUserAgents() {
+        return noCompressionUserAgents;
+    }
+
+    public void setNoCompressionUserAgents(String noCompressionUserAgents) {
+        this.noCompressionUserAgents = noCompressionUserAgents;
+    }
+
+    public String getCompressionMimeType() {
+        return compressionMimeType;
+    }
+
+    public void setCompressionMimeType(String compressionMimeType) {
+        this.compressionMimeType = compressionMimeType;
     }
 
     /**
@@ -63,7 +116,8 @@ public class Connector implements Runnable {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        HttpProcessor.execute(socket, service);
+                        HttpProcessor processor = new HttpProcessor();
+                        processor.execute(socket, Connector.this);
                     }
                 };
                 ThreadPoolUtil.run(runnable);

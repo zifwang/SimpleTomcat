@@ -1,5 +1,6 @@
 package SimpleTomcat.http;
 
+import SimpleTomcat.catalina.Connector;
 import SimpleTomcat.catalina.Context;
 import SimpleTomcat.catalina.Service;
 import SimpleTomcat.util.MiniBrowser;
@@ -29,6 +30,7 @@ public class Request extends BaseRequest{
     private String method;                          // http method;
     private Context context;                        // Context object is used to store web services information
     private Service service;                        // Service object provided web services
+    private Connector connector;                    // Connector object
     private Socket socket;                          // socket: client-server message transportation
     private String queryString;                     // data String from client. e.g. http://127.0.0.1:8080/hello?name=a, the queryString is name=a
     private Map<String, String[]> parameterMap;     // parameterMap: contains data from client to server which is parsed from queryString
@@ -36,14 +38,16 @@ public class Request extends BaseRequest{
     private Cookie[] cookies;                       // cookie: request must be able to accept cookie from client's web browser
     private HttpSession session;                    // session
 
+
     /**
      * Constructor
      * @param socket: web socket
      * @throws IOException
      */
-    public Request(Socket socket, Service service) throws IOException {
+    public Request(Socket socket, Connector connector) throws IOException {
         this.socket = socket;
-        this.service = service;
+        this.connector = connector;
+        this.service = connector.getService();
         this.parameterMap = new HashMap<>();
         this.headerMap = new HashMap<>();
 
@@ -82,6 +86,10 @@ public class Request extends BaseRequest{
 
     public Context getContext() {
         return this.context;
+    }
+
+    public Connector getConnector() {
+        return this.connector;
     }
 
     @Override

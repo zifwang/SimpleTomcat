@@ -3,6 +3,7 @@ package SimpleTomcat.util;
 import SimpleTomcat.catalina.*;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.log.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -160,17 +161,22 @@ public class XMLParser {
      *  2. init. Connector Object
      *  3. add to connectors list
      * @param service: service provided by simple tomcat
-     * @return
+     * @return connector
      */
     public static List<Connector> getConnectors(Service service) {
-        List<Connector> connectors = new ArrayList<Connector>();
+        List<Connector> connectors = new ArrayList<>();
 
         String xml = FileUtil.readUtf8String(Constant.serverXmlFile);
         Document document = Jsoup.parse(xml);
         Elements elements = document.select("Connector");
         for (Element element : elements) {
-            String port = element.attr("port");
-            Connector connector = new Connector(Integer.parseInt(port), service);
+            int port = Convert.toInt(element.attr("port"));
+            String compression = element.attr("compression");
+            int compressionMinSize = Convert.toInt(element.attr("compressionMinSize"), 0);
+            String noCompressionUserAgents = element.attr("noCompressionUserAgents");
+            String compressionMimeType = element.attr("compressionMimeType");
+
+            Connector connector = new Connector(port, service, compression, compressionMinSize, noCompressionUserAgents, compressionMimeType);
             connectors.add(connector);
         }
 
