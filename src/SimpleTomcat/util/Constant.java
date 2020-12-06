@@ -68,4 +68,7 @@ public class Constant {
     // Http Request Method
     public static final String HttpGet = "GET";
     public static final String HttpPost = "POST";
+
+    // Directory to save file translated from .jsp file to .java file
+    public static final String workFolder = SystemUtil.get("user.dir") + File.separator + "work";
 }

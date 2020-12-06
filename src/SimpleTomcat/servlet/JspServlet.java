@@ -1,8 +1,11 @@
 package SimpleTomcat.servlet;
 
+import SimpleTomcat.catalina.Context;
+import SimpleTomcat.classloader.JspClassLoader;
 import SimpleTomcat.http.Request;
 import SimpleTomcat.http.Response;
 import SimpleTomcat.util.Constant;
+import SimpleTomcat.util.JspTranslateUtil;
 import SimpleTomcat.util.XMLParser;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
@@ -47,14 +50,40 @@ public class JspServlet extends HttpServlet {
 
             String fileName = StrUtil.removePrefix(uri, "/");
             File file = FileUtil.file(request.getRealPath(fileName));
+            File jspFile = file;
 
-            if (file.exists()) {
+            if (jspFile.exists()) {
+                Context context = request.getContext();
+                String path = context.getPath();
+                String subDirectory;
+                // root
+                if (path.equals("/")) {
+                    subDirectory = "_";
+                } else {
+                    // not root
+                    subDirectory = StrUtil.subAfter(path, '/', false);
+                }
+
+                String servletClassPath = JspTranslateUtil.getServletClassPath(uri, subDirectory);
+                File jspServletClassFile = new File(servletClassPath);
+                // determine whether .jsp file need recompile
+                if (!jspServletClassFile.exists()) {
+                    JspTranslateUtil.compileJsp(context, jspFile);
+                } else if (jspFile.lastModified() > jspServletClassFile.lastModified()) {
+                    JspTranslateUtil.compileJsp(context, jspFile);
+                    JspClassLoader.invalidJspClassLoader(uri, context);
+                }
+
                 String extName = FileUtil.extName(file);
                 String mimeType = XMLParser.getMineType(extName);
                 response.setContentType(mimeType);
 
-                byte[] body = FileUtil.readBytes(file);
-                response.setBody(body);
+                JspClassLoader jspClassLoader = JspClassLoader.getJspClassLoader(uri, context);
+                String jspServletClassName = JspTranslateUtil.getJspServletClassName(uri, subDirectory);
+                Class jspServletClass = jspClassLoader.loadClass(jspServletClassName);
+                HttpServlet servlet = context.getHttpServlet(jspServletClass);
+                servlet.service(request, response);
+
                 response.setStatus(Constant.CODE_200);
             } else {
                 response.setStatus(Constant.CODE_404);

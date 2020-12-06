@@ -11,6 +11,8 @@ import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
+import org.apache.jasper.JspC;
+import org.apache.jasper.compiler.JspRuntimeContext;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -139,6 +141,10 @@ public class Context {
             contextFileChangeMonitor = new ContextFileChangeMonitor(this);
             contextFileChangeMonitor.start();
         }
+
+        JspC jspC = new JspC();
+        // init JspRunTimeContext: 为了能够在jsp所转换的 java 文件里的 javax.servlet.jsp.JspFactory.getDefaultFactory() 这行能够有返回值
+        new JspRuntimeContext(servletContext, jspC);
     }
 
     /**
