@@ -37,12 +37,21 @@ public class DefaultServlet extends HttpServlet {
     public void service(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = (Request) httpServletRequest;
         Response response = (Response) httpServletResponse;
-        String uri = request.getUri();
+        String uri = request.getRequestURI();
         Context context = request.getContext();
         if("/500.html".equals(uri))
             throw new RuntimeException("this is a deliberately created exception");
         // uri in root -> open welcome file: index.html/jsp
-        if (uri.equals("/")) uri = XMLParser.getWelcomeFile(request.getContext());
+        if (uri.equals("/")) {
+            uri = XMLParser.getWelcomeFile(request.getContext());
+        }
+
+        // .jsp file use JspServlet to execute
+        if (uri.endsWith(".jsp")) {
+            JspServlet.getInstance().service(request, response);
+            return;
+        }
+
         String fileName = StrUtil.removePrefix(uri, "/");
         File file = FileUtil.file(request.getRealPath(fileName));
 

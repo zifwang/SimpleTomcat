@@ -4,6 +4,7 @@ import SimpleTomcat.http.Request;
 import SimpleTomcat.http.Response;
 import SimpleTomcat.servlet.DefaultServlet;
 import SimpleTomcat.servlet.InvokeServlet;
+import SimpleTomcat.servlet.JspServlet;
 import SimpleTomcat.util.Constant;
 import SimpleTomcat.util.SessionManager;
 import cn.hutool.core.util.ArrayUtil;
@@ -41,8 +42,16 @@ public class HttpProcessor {
 
             String servletClassName = request.getContext().getServletClassByUrl(uri);
 
-            if (servletClassName != null) InvokeServlet.getInstance().service(request, response);
-            else DefaultServlet.getInstance().service(request, response);
+            // Choose the way to provide service based on servlet (use one of methods: InvokeServlet, JspServlet, and DefaultServlet)
+            if (servletClassName != null) {
+                InvokeServlet.getInstance().service(request, response);
+            }
+            else if (uri.endsWith(".jsp")) {
+                JspServlet.getInstance().service(request, response);
+            }
+            else {
+                DefaultServlet.getInstance().service(request, response);
+            }
 
             if (response.getStatus() == Constant.CODE_200) {
                 handle200(socket, request, response);

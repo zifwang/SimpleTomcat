@@ -232,6 +232,12 @@ public class TestSimpleTomcat {
         Assert.assertEquals(html, "Hello Simple Tomcat from ROOT's index.html");
     }
 
+    @Test
+    public void testJsp() {
+        String html = getContentString("/javaweb/");
+        Assert.assertEquals(html, "hello jsp@javaweb");
+    }
+
     private byte[] getContentBytes(String uri) {
         return getContentBytes(uri,false);
     }
