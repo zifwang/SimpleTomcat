@@ -36,6 +36,12 @@ public class Response extends BaseResponse{
         this.cookies = new ArrayList<>();
     }
 
+    // remove cache to make sure resetting body when server jump happens. This aims to prevent last page impacting current web page
+    @Override
+    public void resetBuffer() {
+        this.stringWriter.getBuffer().setLength(0);
+    }
+
     @Override
     public void sendRedirect(String redirectPath) throws IOException {
         this.redirectPath = redirectPath;

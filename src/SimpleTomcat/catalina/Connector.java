@@ -1,5 +1,7 @@
 package SimpleTomcat.catalina;
 
+import SimpleTomcat.http.Request;
+import SimpleTomcat.http.Response;
 import SimpleTomcat.util.ThreadPoolUtil;
 import cn.hutool.log.LogFactory;
 
@@ -116,8 +118,22 @@ public class Connector implements Runnable {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        HttpProcessor processor = new HttpProcessor();
-                        processor.execute(socket, Connector.this);
+                        try {
+                            Request request = new Request(socket, Connector.this);
+                            Response response = new Response();
+                            HttpProcessor processor = new HttpProcessor();
+                            processor.execute(socket, request, response);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (!socket.isClosed()) {
+                                try {
+                                    socket.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
                 };
                 ThreadPoolUtil.run(runnable);

@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 
 import javax.management.monitor.StringMonitor;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
@@ -37,7 +38,8 @@ public class Request extends BaseRequest{
     private Map<String, String> headerMap;          // headerMap: contains info about client's system
     private Cookie[] cookies;                       // cookie: request must be able to accept cookie from client's web browser
     private HttpSession session;                    // session
-
+    private boolean forwarded;                      // server jump
+    private Map<String, Object> attributesMap;      // save properties
 
     /**
      * Constructor
@@ -50,6 +52,7 @@ public class Request extends BaseRequest{
         this.service = connector.getService();
         this.parameterMap = new HashMap<>();
         this.headerMap = new HashMap<>();
+        this.attributesMap = new HashMap<>();
 
         // parse http request
         parseHttpRequest();
@@ -74,6 +77,48 @@ public class Request extends BaseRequest{
         parseHeader();
         // parse cookie: cookie is contained in headerMap with key = cookie
         parseCookies();
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        attributesMap.remove(name);
+    }
+
+    @Override
+    public void setAttribute(String name, Object value) {
+        attributesMap.put(name, value);
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        return attributesMap.get(name);
+    }
+
+    @Override
+    public Enumeration<String> getAttributeNames() {
+        return Collections.enumeration(attributesMap.keySet());
+    }
+
+    // server side http jump
+    @Override
+    public RequestDispatcher getRequestDispatcher(String uri) {
+        return new ApplicationRequestDispatcher(uri);
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public boolean isForwarded() {
+        return forwarded;
+    }
+
+    public void setForwarded(boolean forwarded) {
+        this.forwarded = forwarded;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public String getUri() {

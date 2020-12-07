@@ -26,13 +26,11 @@ public class HttpProcessor {
     /**
      * execute http request and give response to web app based on this request
      * @param socket: web socket
-     * @param connector: connector
+     * @param request: http request
+     * @param response: http response
      */
-    public void execute(Socket socket, Connector connector) {
+    public void execute(Socket socket, Request request, Response response) {
         try {
-            Request request = new Request(socket, connector);
-            // create response
-            Response response = new Response();
             String uri = request.getUri();
             if (uri == null) {
                 return;
@@ -52,6 +50,11 @@ public class HttpProcessor {
             }
             else {
                 DefaultServlet.getInstance().service(request, response);
+            }
+
+            if (request.isForwarded()) {
+                // check server side jump
+                return;
             }
 
             if (response.getStatus() == Constant.CODE_200) {
