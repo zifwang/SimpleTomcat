@@ -9,6 +9,7 @@ import SimpleTomcat.util.XMLParser;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
 import org.apache.jasper.JspC;
@@ -18,9 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import java.io.File;
 import java.util.*;
@@ -54,6 +53,13 @@ public class Context {
     private ServletContext servletContext;                      // servlet context
     private Map<Class<?>, HttpServlet> servletPool;             // servlet pool
 
+    private Map<String, List<String>> url_filterClassNames;     // map url to filter classes: key: url, value: filterClasses' name (classes url need to travel)
+    private Map<String, List<String>> url_filterNames;          // map url to filter names: key: url, value: filters' names (classes url need to travel)
+    private Map<String, String> filterName_filterClassName;     // map filter name to filter class name: key: filter name, value: filter class name
+    private Map<String, String> filterClassName_filterName;     // map filter class name to filter name: key: filter class name, value: filter name
+    private Map<String, Map<String, String>> filterClassName_initParams; // map filter_name to class name and init params;
+    private Map<String, Filter> filterPool;                     // filter pool
+
     /**
      * constructor
      * @param path: url path
@@ -73,6 +79,12 @@ public class Context {
         this.servletContext = new ApplicationContext(this);
         this.servletPool = new HashMap<>();
         this.loadOnStartupServletClassName = new ArrayList<>();
+        this.url_filterClassNames = new HashMap<>();
+        this.url_filterNames = new HashMap<>();
+        this.filterName_filterClassName = new HashMap<>();
+        this.filterClassName_filterName = new HashMap<>();
+        this.filterClassName_initParams = new HashMap<>();
+        this.filterPool = new HashMap<>();
 
         ClassLoader commonClassLoader = Thread.currentThread().getContextClassLoader();
         this.webappClassLoader = new WebappClassLoader(docBase, commonClassLoader);
@@ -179,12 +191,18 @@ public class Context {
 
             // parse servlet mapping
             parseServletMapping(document);
+            // parse filter mapping
+            parseFilterMapping(document);
             // parse servlet init. config.
             parseServletInitConfig(document);
+            // parse filter init. config.
+            parseFilterInitParams(document);
             // parse servlet load on startup property
             parseServletLoadOnStartup(document);
             // handle load on startup
             handleLoadOnStartup();
+            // init filter
+            initFilter();
         } catch (WebConfigException webConfigException) {
             webConfigException.printStackTrace();
             return false;
@@ -301,6 +319,134 @@ public class Context {
     }
 
     /**
+     * Filter is configured in the web.xml of a web app.
+     *  Get all info in tag <filter></filter> in web.xml and parse into filter maps
+     * @param document: web.xml
+     * @throws WebConfigException: WebConfigException
+     */
+    private void parseFilterMapping(Document document) throws WebConfigException {
+        Elements filters = document.select("filter");
+
+        // parse filterName_filterClassName & filterClassName_filterName
+        for (Element filter : filters) {
+            String filterName = filter.selectFirst("filter-name").text();
+            String filterClass = filter.selectFirst("filter-class").text();
+
+            if (!filterName_filterClassName.containsKey(filterName)) {
+                filterName_filterClassName.put(filterName, filterClass);
+            }
+            else {
+                throw new WebConfigException(
+                        StrUtil.format("filter-name: {} duplicated. The filter-name has to be unique.",
+                                filterName));
+            }
+
+            if (!filterClassName_filterName.containsKey(filterClass)) {
+                filterClassName_filterName.put(filterClass, filterName);
+            }
+            else {
+                throw new WebConfigException(
+                        StrUtil.format("filter-class-name: {} duplicated. The filter-class-name has to be unique.",
+                                filterClass));
+            }
+        }
+
+        // parse url_filterClassNames & url_filterNames
+        Elements filterMappings = document.select("filter-mapping");
+        for (Element filterMapping : filterMappings) {
+            String filterName = filterMapping.selectFirst("filter-name").text();
+            String url = filterMapping.selectFirst("url-pattern").text();
+
+            if (!filterName_filterClassName.containsKey(filterName)) {
+                throw new WebConfigException(
+                        StrUtil.format("Url: {}'s corresponding filter name: {} not found.",
+                                url, filterName));
+            }
+            String filterClass = filterName_filterClassName.get(filterName);
+            if (!filterClassName_filterName.containsKey(filterClass)) {
+                throw new WebConfigException(
+                        StrUtil.format("Url: {}'s corresponding filter class: {} not found.",
+                                url, filterClass));
+            }
+            if (!filterClassName_filterName.get(filterClass).equals(filterName)) {
+                throw new WebConfigException(
+                        StrUtil.format("Url: {}'s corresponding filter name: {} and filter class: {} are not corresponding to each other",
+                                url, filterName, filterClass)
+                );
+            }
+
+            if (url_filterNames.containsKey(url)) {
+                url_filterNames.get(url).add(filterName);
+            } else {
+                List<String> filterNames = new ArrayList<>();
+                filterNames.add(filterName);
+                url_filterNames.put(url, filterNames);
+            }
+
+            if (url_filterClassNames.containsKey(url)) {
+                url_filterClassNames.get(url).add(filterClass);
+            } else {
+                List<String> classNames = new ArrayList<>();
+                classNames.add(filterClass);
+                url_filterClassNames.put(url, classNames);
+            }
+
+        }
+    }
+
+    /**
+     * Filter is configured in the web.xml of a web app. This method is to parse init params mapping
+     * @param document: web.xml
+     * @throws WebConfigException: WebConfigException
+     * filterClassName_initParams
+     */
+    private void parseFilterInitParams(Document document) throws WebConfigException {
+        Elements filterClassNameElements = document.select("filter-class");
+        for (Element filterClassNameElement : filterClassNameElements) {
+            String filterClassName = filterClassNameElement.text();
+
+            Elements initElements = filterClassNameElement.parent().select("init-param");
+            if (initElements.isEmpty())
+                continue;
+
+            Map<String, String> initParams = new HashMap<>();
+
+            for (Element element : initElements) {
+                String name = element.select("param-name").get(0).text();
+                String value = element.select("param-value").get(0).text();
+                initParams.put(name, value);
+            }
+
+            filterClassName_initParams.put(filterClassName, initParams);
+        }
+    }
+
+    /**
+     * init filter
+     */
+    private void initFilter() {
+        Set<String> filterClassNames = filterClassName_filterName.keySet();
+        for (String filterClassName : filterClassNames) {
+            try {
+                Class clazz = this.getWebappClassLoader().loadClass(filterClassName);
+                Map<String, String> initParams = filterClassName_initParams.get(filterClassName);
+                String filterName = filterClassName_filterName.get(filterClassName);
+                FilterConfig filterConfig = new StandardFilterConfig(servletContext, initParams, filterName);
+
+                Filter filter = filterPool.get(clazz);
+                if(filter == null) {
+                    filter = (Filter) ReflectUtil.newInstance(clazz);
+                    filter.init(filterConfig);
+                    filterPool.put(filterClassName, filter);
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
      * destroy servlets in the servlet pool
      */
     private void destroyServlets() {
@@ -406,4 +552,60 @@ public class Context {
         this.reloadable = reloadable;
     }
 
+    /**
+     * uriMatchFilterPattern: compare pattern with uri
+     * @param pattern: filter url-pattern
+     * @param uri: request url
+     * @return true or false
+     */
+    private boolean uriMatchFilterPattern(String pattern, String uri) {
+        // completely match
+        if (StrUtil.equals(pattern, uri)) {
+            return true;
+        }
+
+        // /* pattern
+        if (StrUtil.equals(pattern, "/*")) {
+            return true;
+        }
+
+        // suffix match
+        if (StrUtil.startWith(pattern, "/*.")) {
+            String patternExtName = StrUtil.subAfter(pattern, '.', false);
+            String uriExtName = StrUtil.subAfter(uri, '.', false);
+            if (StrUtil.equals(patternExtName, uriExtName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * get matched filters
+     * @param uri: request uri
+     * @return
+     */
+    public List<Filter> getMatchedFilters(String uri) {
+        List<Filter> filters = new ArrayList<>();
+        Set<String> patterns = url_filterClassNames.keySet();
+        Set<String> matchedPatterns = new HashSet<>();
+        for (String pattern : patterns) {
+            if (uriMatchFilterPattern(pattern, uri)) {
+                matchedPatterns.add(pattern);
+            }
+        }
+
+        Set<String> matchedFilterClassNames = new HashSet<>();
+        for (String pattern : matchedPatterns) {
+            List<String> filterClassName = url_filterClassNames.get(pattern);
+            matchedFilterClassNames.addAll(filterClassName);
+        }
+        for (String filterClassName : matchedFilterClassNames) {
+            Filter filter = filterPool.get(filterClassName);
+            filters.add(filter);
+        }
+
+        return filters;
+    }
 }

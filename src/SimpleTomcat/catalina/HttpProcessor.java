@@ -13,11 +13,14 @@ import cn.hutool.core.util.ZipUtil;
 import cn.hutool.log.LogFactory;
 import org.apache.tomcat.util.bcel.Const;
 
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * HttpProcessor object is used to execute web request
@@ -41,16 +44,21 @@ public class HttpProcessor {
 
             String servletClassName = request.getContext().getServletClassByUrl(uri);
 
+            HttpServlet workingServlet;
             // Choose the way to provide service based on servlet (use one of methods: InvokeServlet, JspServlet, and DefaultServlet)
             if (servletClassName != null) {
-                InvokeServlet.getInstance().service(request, response);
+                workingServlet = InvokeServlet.getInstance();
             }
             else if (uri.endsWith(".jsp")) {
-                JspServlet.getInstance().service(request, response);
+                workingServlet = JspServlet.getInstance();
             }
             else {
-                DefaultServlet.getInstance().service(request, response);
+                workingServlet = DefaultServlet.getInstance();
             }
+
+            List<Filter> filterList = request.getContext().getMatchedFilters(request.getRequestURI());
+            ApplicationFilterChain filterChain = new ApplicationFilterChain(filterList, workingServlet);
+            filterChain.doFilter(request, response);
 
             if (request.isForwarded()) {
                 // check server side jump
