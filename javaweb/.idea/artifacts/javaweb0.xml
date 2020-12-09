@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="javaweb0">
+    <output-path>$PROJECT_DIR$/..</output-path>
+    <root id="archive" name="javaweb0.war" />
+  </artifact>
+</component>
