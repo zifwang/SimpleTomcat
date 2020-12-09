@@ -253,6 +253,12 @@ public class TestSimpleTomcat {
         containAssert(http_servlet,"Hello Simple Tomcat from HelloServlet@javaweb, the name is gareen");
     }
 
+    @Test
+    public void testJavaweb0Hello() {
+        String html = getContentString("/javaweb0/hello");
+        containAssert(html,"Hello DIY Tomcat from HelloServlet@javaweb");
+    }
+
     private byte[] getContentBytes(String uri) {
         return getContentBytes(uri,false);
     }

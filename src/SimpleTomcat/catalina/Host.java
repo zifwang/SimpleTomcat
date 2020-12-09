@@ -1,7 +1,11 @@
 package SimpleTomcat.catalina;
 
+import SimpleTomcat.monitor.WarFileMonitor;
 import SimpleTomcat.util.Constant;
 import SimpleTomcat.util.XMLParser;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
 
 import java.io.File;
@@ -24,6 +28,9 @@ public class Host {
 
         scanContextsOnWebAppsFolder();
         loadContextsInServerXML();
+        scanWarOnWebAppsFolder();
+
+        new WarFileMonitor(this).start();
     }
 
     public String getHostName() {
@@ -94,6 +101,67 @@ public class Host {
         List<Context> contexts = XMLParser.getContexts(this);
         for (Context context : contexts) {
             this.contextMap.put(context.getPath(), context);
+        }
+    }
+
+    /**
+     * load directory
+     * @param folder: directory
+     */
+    private void load(File folder) {
+        String path = folder.getName();
+        if (path.equals("ROOT")) {
+            path = "/";
+        } else {
+            path = "/" + path;
+        }
+        String docBase = folder.getAbsolutePath();
+        Context context = new Context(path, docBase, false, this);
+    }
+
+    /**
+     * load war file:
+     * @param warFile: war file
+     */
+    public void loadWar(File warFile) {
+        String fileName = warFile.getName();
+        String folderName = StrUtil.subBefore(fileName, ".", true);
+        Context context = getContext("/" + folderName);
+        // if context existed, then return
+        if (context != null) {
+            return;
+        }
+        // if not exist
+        File folder = new File(Constant.webappsFolder, folderName);
+        // if folder exists -> return
+        if (folder.exists()) {
+            return;
+        }
+        File tempWarFile = FileUtil.file(Constant.webappsFolder, folderName, fileName);
+        File contextFolder = tempWarFile.getParentFile();
+        contextFolder.mkdir();
+        FileUtil.copyFile(warFile, tempWarFile);
+        //解压
+        String command = "jar xvf " + fileName;
+
+        Process p = RuntimeUtil.exec(null, contextFolder, command);
+        try {
+            p.waitFor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        tempWarFile.delete();
+
+        load(contextFolder);
+    }
+
+    private void scanWarOnWebAppsFolder() {
+        File folder = FileUtil.file(Constant.webappsFolder);
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            if(file.getName().toLowerCase().endsWith(".war"))
+                loadWar(file);
         }
     }
 }
