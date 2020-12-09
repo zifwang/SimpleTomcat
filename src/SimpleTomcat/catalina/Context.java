@@ -9,6 +9,7 @@ import SimpleTomcat.util.XMLParser;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
@@ -60,6 +61,8 @@ public class Context {
     private Map<String, Map<String, String>> filterClassName_initParams; // map filter_name to class name and init params;
     private Map<String, Filter> filterPool;                     // filter pool
 
+    private List<ServletContextListener> listeners;             // context listeners
+
     /**
      * constructor
      * @param path: url path
@@ -85,9 +88,11 @@ public class Context {
         this.filterClassName_filterName = new HashMap<>();
         this.filterClassName_initParams = new HashMap<>();
         this.filterPool = new HashMap<>();
+        this.listeners=new ArrayList<ServletContextListener>();
 
         ClassLoader commonClassLoader = Thread.currentThread().getContextClassLoader();
         this.webappClassLoader = new WebappClassLoader(docBase, commonClassLoader);
+
 
         deploy();
     }
@@ -127,6 +132,7 @@ public class Context {
         webappClassLoader.stop();
         contextFileChangeMonitor.stop();
         destroyServlets();
+        fireEvent("destory");
     }
 
     /**
@@ -140,6 +146,7 @@ public class Context {
      * Deploy web-app
      */
     private void deploy() {
+        loadListeners();
         TimeInterval timeInterval = DateUtil.timer();
         LogFactory.get().info("Deploying web application directory {}", this.docBase);
         boolean successFlag = init();
@@ -203,6 +210,9 @@ public class Context {
             handleLoadOnStartup();
             // init filter
             initFilter();
+
+            // fire listener
+            fireEvent("init");
         } catch (WebConfigException webConfigException) {
             webConfigException.printStackTrace();
             return false;
@@ -607,5 +617,51 @@ public class Context {
         }
 
         return filters;
+    }
+
+    /**
+     * add listener
+     * @param listener: listener
+     */
+    public void addListener(ServletContextListener listener) {
+        this.listeners.add(listener);
+    }
+
+    /**
+     * load listeners from web.xml
+     */
+    private void loadListeners()  {
+        try {
+            if(!webXmlFile.exists())
+                return;
+            String webXml = FileUtil.readUtf8String(webXmlFile);
+            Document d = Jsoup.parse(webXml);
+
+            Elements es = d.select("listener listener-class");
+            for (Element e : es) {
+                String listenerClassName = e.text();
+
+                Class<?> clazz= this.getWebappClassLoader().loadClass(listenerClassName);
+                ServletContextListener listener = (ServletContextListener) clazz.newInstance();
+                addListener(listener);
+
+            }
+        } catch (IORuntimeException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * start Event
+     * @param type
+     */
+    private void fireEvent(String type) {
+        ServletContextEvent event = new ServletContextEvent(servletContext);
+        for (ServletContextListener servletContextListener : listeners) {
+            if("init".equals(type))
+                servletContextListener.contextInitialized(event);
+            if("destroy".equals(type))
+                servletContextListener.contextDestroyed(event);
+        }
     }
 }
